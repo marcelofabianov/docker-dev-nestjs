@@ -5,12 +5,13 @@ services:
     restart: always
     image: marcelofabianov/nestjs
     build:
-      context: .
+      context: ./_docker/local/app
       dockerfile: Dockerfile
     ports:
       - '3000:3000'
     volumes:
       - .:/app
+      - ./_docker/local/app/.zshrc:/home/node/.zshrc
     networks:
       - nest
 
