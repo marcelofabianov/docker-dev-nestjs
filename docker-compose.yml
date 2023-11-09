@@ -1,20 +1,43 @@
 version: '3'
 services:
   app:
-    container_name: app
-    restart: always
+    container_name: nest_app
     image: marcelofabianov/nestjs
+    restart: always
     build:
       context: ./_docker/local/app
       dockerfile: Dockerfile
-    ports:
-      - '3000:3000'
     volumes:
       - .:/app
       - ./_docker/local/app/.zshrc:/home/node/.zshrc
+    ports:
+      - '3000:3000'
     networks:
-      - nest
+      - nest_network
+    depends_on:
+      - db
+
+  db:
+    container_name: nest_db
+    image: postgres:16
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      POSTGRES_USER: ${DB_USERNAME:-user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+      POSTGRES_DB: ${DB_DATABASE:-nest_db}
+    volumes:
+      - nest_db:/var/lib/postgresql/data
+      - ./_docker/local/db/log:/var/log/postgresql
+    ports:
+      - '5555:5432'
+    networks:
+      - nest_network
 
 networks:
-  nest:
+  nest_network:
     driver: bridge
+
+volumes:
+  nest_db:
+    driver: local
