@@ -1,3 +1,6 @@
+alias ns.up="docker compose up -d"
+alias ns.down="docker compose down"
+alias ns.restart="ns.down && ns.up"
 alias ns.exec="docker exec -it app"
 alias ns.zsh="ns.exec zsh"
 alias ns.nest="ns.exec nest"
